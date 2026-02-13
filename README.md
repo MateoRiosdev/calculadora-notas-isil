@@ -182,9 +182,9 @@ This project is created for portfolio purposes. All rights reserved © 2026 Mate
 
 **Mateo Julio Gomero Rios**
 
-- Portfolio: [Add your portfolio link]
-- LinkedIn: [Add your LinkedIn]
-- GitHub: [@your-username](https://github.com/your-username)
+- Portfolio: [Coming Soon]
+- LinkedIn: [www.linkedin.com/in/mateojuliogomerorios]
+- GitHub: [@MateoRiosdev](https://github.com/MateoRiosdev)
 
 ## 🙏 Acknowledgments
 
