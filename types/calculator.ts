@@ -5,7 +5,7 @@ export interface GradeRow {
   percentage: string
 }
 
-export type CalculatorMode = 'actual' | 'antiguo'
+export type CalculatorMode = 'actual' | 'antiguo' | 'english'
 
 export type ModalType = 
   | 'error-grades'

@@ -22,6 +22,16 @@ const PROMEDIO_ANTIGUO_DEFAULT: Omit<GradeRow, 'id'>[] = [
   { description: 'Evaluación Final', grade: '', percentage: '30' },
 ]
 
+const PROMEDIO_ENGLISH_DEFAULT: Omit<GradeRow, 'id'>[] = [
+  { description: 'Proficiency achievement 1', grade: '', percentage: '10' },
+  { description: 'Proficiency achievement 2', grade: '', percentage: '10' },
+  { description: 'Proficiency achievement 3', grade: '', percentage: '10' },
+  { description: 'Proficiency achievement 4', grade: '', percentage: '10' },
+  { description: 'Proficiency achievement 5', grade: '', percentage: '10' },
+  { description: 'Proficiency achievement 6', grade: '', percentage: '10' },
+  { description: 'Final Evaluation', grade: '', percentage: '40' },
+]
+
 export default function Calculator() {
   const [mode, setMode] = useState<CalculatorMode>('actual')
   const [rows, setRows] = useState<GradeRow[]>(
@@ -32,7 +42,12 @@ export default function Calculator() {
 
   const handleModeChange = (newMode: CalculatorMode) => {
     setMode(newMode)
-    const defaultRows = newMode === 'actual' ? PROMEDIO_ACTUAL_DEFAULT : PROMEDIO_ANTIGUO_DEFAULT
+    const defaultRows =
+      newMode === 'actual'
+        ? PROMEDIO_ACTUAL_DEFAULT
+        : newMode === 'antiguo'
+        ? PROMEDIO_ANTIGUO_DEFAULT
+        : PROMEDIO_ENGLISH_DEFAULT
     setRows(defaultRows.map((row, index) => ({ ...row, id: `row-${index}` })))
   }
 
@@ -54,6 +69,10 @@ export default function Calculator() {
     if (rows.length > 1) {
       setRows(rows.filter(row => row.id !== id))
     }
+  }
+
+  const clearData = () => {
+    setRows(rows.map(row => ({ ...row, grade: '', percentage: '0' })))
   }
 
   const calculateAverage = () => {
@@ -136,10 +155,10 @@ export default function Calculator() {
     <div className="max-w-4xl mx-auto">
       <div className="bg-white dark:bg-dark-panel rounded-2xl shadow-lg p-6 md:p-8">
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
           <button
             onClick={() => handleModeChange('antiguo')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors ${
+            className={`py-3 px-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base ${
               mode === 'antiguo'
                 ? 'bg-isil-cyan text-black'
                 : 'bg-light-bg dark:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -149,7 +168,7 @@ export default function Calculator() {
           </button>
           <button
             onClick={() => handleModeChange('actual')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors ${
+            className={`py-3 px-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base ${
               mode === 'actual'
                 ? 'bg-isil-cyan text-black'
                 : 'bg-light-bg dark:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -157,26 +176,52 @@ export default function Calculator() {
           >
             Promedio Actual
           </button>
+          <button
+            onClick={() => handleModeChange('english')}
+            className={`col-span-2 sm:col-span-1 py-3 px-2 sm:px-4 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+              mode === 'english'
+                ? 'bg-isil-cyan text-black'
+                : 'bg-light-bg dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
+          >
+            Promedio ENGLISH LEVEL
+          </button>
         </div>
 
+        {mode === 'english' && (
+          <div className="mb-6 p-4 rounded-lg border border-isil-cyan/40 bg-light-bg dark:bg-dark-input text-gray-700 dark:text-gray-300 text-sm">
+            <strong className="text-black dark:text-white">Nota:</strong> Si eres estudiante de ISIL, no
+            te olvides desarrollar las tareas de la plataforma <strong>&quot;Altissia&quot;</strong> para
+            aprobar con las 6 notas de Platform Evaluation.
+          </div>
+        )}
+
         {/* Table Headers */}
-        <div className="grid grid-cols-12 gap-2 mb-4 px-2">
-          <div className="col-span-4 text-gray-600 dark:text-gray-400 font-medium text-sm">
+        <div className="hidden sm:grid grid-cols-12 gap-2 mb-4 px-2">
+          <div className="col-span-5 text-gray-600 dark:text-gray-400 font-medium text-sm">
             Descripción
           </div>
-          <div className="col-span-3 text-gray-600 dark:text-gray-400 font-medium text-sm">
+          <div className="col-span-2 text-gray-600 dark:text-gray-400 font-medium text-sm">
             Calificación
           </div>
-          <div className="col-span-5 text-gray-600 dark:text-gray-400 font-medium text-sm">
+          <div className="col-span-3 text-gray-600 dark:text-gray-400 font-medium text-sm">
             Porcentaje
           </div>
         </div>
 
         {/* Table Rows */}
-        <div className="space-y-3">
+        <div className="space-y-4 sm:space-y-3">
           {rows.map((row) => (
-            <div key={row.id} className="grid grid-cols-12 gap-2 items-center">
-              <div className="col-span-4">
+            <div
+              key={row.id}
+              className="flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:items-center
+                         border border-gray-200 dark:border-gray-700 sm:border-none
+                         rounded-lg sm:rounded-none p-3 sm:p-0"
+            >
+              <div className="sm:col-span-5">
+                <label className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+                  Descripción
+                </label>
                 <input
                   type="text"
                   value={row.description}
@@ -187,38 +232,49 @@ export default function Calculator() {
                   placeholder="Descripción"
                 />
               </div>
-              <div className="col-span-3">
-                <input
-                  type="number"
-                  value={row.grade}
-                  onChange={(e) => updateRow(row.id, 'grade', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                           bg-white dark:bg-dark-input text-black dark:text-white 
-                           placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-isil-cyan"
-                  placeholder="Nota"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                />
-              </div>
-              <div className="col-span-3">
-                <div className="relative">
+
+              <div className="flex gap-2 sm:contents">
+                <div className="flex-1 sm:col-span-2">
+                  <label className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+                    Calificación
+                  </label>
                   <input
                     type="number"
-                    value={row.percentage}
-                    onChange={(e) => updateRow(row.id, 'percentage', e.target.value)}
-                    className="w-full px-3 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg 
+                    value={row.grade}
+                    onChange={(e) => updateRow(row.id, 'grade', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
                              bg-white dark:bg-dark-input text-black dark:text-white 
                              placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-isil-cyan"
-                    placeholder="0"
+                    placeholder="Nota"
                     min="0"
                     max="100"
-                    step="1"
+                    step="0.01"
                   />
-                  <Percent className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
+
+                <div className="flex-1 sm:col-span-3">
+                  <label className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mb-1 block">
+                    Porcentaje
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      value={row.percentage}
+                      onChange={(e) => updateRow(row.id, 'percentage', e.target.value)}
+                      className="w-full px-3 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg 
+                               bg-white dark:bg-dark-input text-black dark:text-white 
+                               placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-isil-cyan"
+                      placeholder="0"
+                      min="0"
+                      max="100"
+                      step="1"
+                    />
+                    <Percent className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
               </div>
-              <div className="col-span-2 flex gap-1 justify-end">
+
+              <div className="sm:col-span-2 flex gap-1 justify-end mt-1 sm:mt-0">
                 <button
                   onClick={addRow}
                   className="w-8 h-8 rounded-full bg-btn-gray hover:bg-gray-700 text-white flex items-center justify-center transition-colors"
@@ -240,13 +296,20 @@ export default function Calculator() {
         </div>
 
         {/* Calculate Button */}
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3">
           <button
             onClick={calculateAverage}
-            className="w-full bg-btn-gray dark:bg-dark-input hover:bg-gray-700 dark:hover:bg-gray-600 
+            className="flex-1 bg-btn-gray dark:bg-dark-input hover:bg-gray-700 dark:hover:bg-gray-600 
                      text-white font-medium py-4 px-6 rounded-lg transition-colors text-lg"
           >
             Calcular Calificación Final
+          </button>
+          <button
+            onClick={clearData}
+            className="sm:w-auto bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600
+                     text-black dark:text-white font-medium py-4 px-6 rounded-lg transition-colors text-lg"
+          >
+            Limpiar
           </button>
         </div>
       </div>

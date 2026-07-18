@@ -180,7 +180,7 @@ This project is created for portfolio purposes. All rights reserved © 2026 Mate
 
 ## 👤 Author
 
-**Mateo Julio Gomero Rios**
+**MateoRiosdev / Mateo Julio Gomero Rios**
 
 - Portfolio: [Add your portfolio link]
 - LinkedIn: [Add your LinkedIn]
