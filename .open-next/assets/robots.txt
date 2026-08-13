@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://calculadora-notas-isil-71sl1iroi-mateo-julio.vercel.app/sitemap.xml
